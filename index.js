@@ -1,6 +1,7 @@
 var express = require('express');
 var cors = require('cors');
-require('dotenv').config()
+var formidable = require('formidable')
+//require('dotenv').config()
 
 var app = express();
 
@@ -12,9 +13,17 @@ app.get('/', function (req, res) {
 });
 
 
+app.post('/api/fileanalyse', (req, res, next) => {
+  const form = formidable({ });
 
-
-const port = process.env.PORT || 3000;
-app.listen(port, function () {
-  console.log('Your app is listening on port ' + port)
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    //res.json({ fields, files });
+    res.json({name: files.upfile.originalFilename, type: files.upfile.mimetype, size: files.upfile.size})
+  });
 });
+
+app.listen(10000);
